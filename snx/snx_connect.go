@@ -16,12 +16,12 @@ import (
 )
 
 type SNXParams struct {
-	Host         string `help:"VPN Hostname" name:"host" type:"string" required:""`
-	User         string `help:"VPN Username" name:"user" type:"string" required:""`
-	Password     string `help:"User's password" name:"password" type:"string"`
-	Realm        string `help:"VPN Realmd" name:"realm" type:"string" required:""`
-	SkipSecurity bool   `help:"Skip TLS Verify in HTTPS Connection" name:"skip-security" type:"bool"`
-	Debug        bool   `help:"Enable debug log" name:"debug" type:"bool"`
+	Host         string
+	User         string
+	Password     string
+	Realm        string
+	SkipSecurity bool
+	Debug        bool
 }
 
 type SNXConnect struct {
