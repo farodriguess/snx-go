@@ -1,10 +1,9 @@
 name: snxgo build
 
-on:
+on: 
   push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    branches:
+     - main
 
 jobs:
   build:
@@ -28,6 +27,12 @@ jobs:
       - name: Build
         run: make
       # Create release  
+      - name: Generate release tag
+        id: generate_release_tag
+        uses: amitsingh-007/next-release-tag@v3.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: 'v'
       - name: Get Artifact Name
         id: get_artifact_name
         run: |
@@ -39,8 +44,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.generate_release_tag.outputs.release_tag }}
+          release_name: Release ${{ steps.generate_release_tag.outputs.release_tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
