@@ -7,6 +7,10 @@ current_time = $(shell date +"%Y-%m-%d:T%H:%M:%S")
 # Add linker flags
 linker_flags = '-s -X main.buildTime=${current_time} -X main.version=${git_hash}'
 
+ifeq ($(PREFIX),)
+	PREFIX := /usr/local
+endif
+
 .PHONY:
 build:
 	@echo "Building binaries..."
@@ -15,3 +19,6 @@ build:
 
 clean:
 	rm -rf ./bin
+
+install:
+	cp ./bin/snxgo ${PREFIX}/bin
