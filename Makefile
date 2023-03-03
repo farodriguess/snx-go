@@ -7,6 +7,14 @@ current_time = $(shell date +"%Y-%m-%d:T%H:%M:%S")
 # Add linker flags
 linker_flags = '-s -X main.buildTime=${current_time} -X main.version=${git_hash}'
 
+ifeq ($(GOOS),)
+	GOOS := linux
+endif
+
+ifeq ($(GOARCH),)
+	GOARCH := amd64
+endif
+
 ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
@@ -14,8 +22,8 @@ endif
 .PHONY:
 build:
 	@echo "Building binaries..."
-	go build -ldflags=${linker_flags} -o=./bin/snxgo ./cmd/snx-connnect/main.go
-	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/snxgo-linux-amd64 ./cmd/snx-connnect/main.go
+	GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags=${linker_flags} -o=./bin/snxgo-${GOOS}-${GOARCH} ./cmd/snx-connnect/main.go
+	ln -sf snxgo-${GOOS}-${GOARCH} bin/snxgo
 
 clean:
 	rm -rf ./bin
