@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"snxgo/snx"
 	"strings"
 	"syscall"
@@ -54,6 +55,7 @@ type versionFlag bool
 func (v versionFlag) BeforeApply() error {
 	fmt.Printf("Version:\t%s\n", version)
 	fmt.Printf("Build time:\t%s\n", buildTime)
+	fmt.Printf("OS/Arch:\t%s/%s\n", runtime.GOOS, runtime.GOARCH)
 	os.Exit(0)
 	return nil
 }
