@@ -42,12 +42,6 @@ func (lrt LoggerRoundTripper) RoundTrip(req *http.Request) (res *http.Response, 
 	reqBody := readBody(req.Body)
 	reqClone := req.Clone(req.Context())
 	reqClone.Body = io.NopCloser(strings.NewReader(reqBody))
-	// reqClone.Header.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0")
-	// reqClone.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-	// reqClone.Header.Add("Accept-Language", "en-US,pt-BR;q=0.7,en;q=0.3")
-	// reqClone.Header.Add("DNT", "1")
-	// reqClone.Header.Add("Upgrade-Insecure-Requests", "1")
-	// reqClone.Header.Add("Origin", "https://remoteaccess.alelo.com.br")
 	res, e = lrt.Proxied.RoundTrip(reqClone)
 
 	text := `
