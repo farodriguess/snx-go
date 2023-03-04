@@ -57,8 +57,9 @@ jobs:
           notes_file=notes.md
           echo "# 🤖 Files Checksum" > $notes_file
           echo '```' >> $notes_file
-          ls -lta
-          sha256sum ./bin/* >> $notes_file
+          cd bin
+          sha256sum * >> ../$notes_file
+          cd ..
           echo '```' >> $notes_file
 
       # Create release
