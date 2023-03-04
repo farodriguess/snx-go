@@ -2,8 +2,24 @@
 
 snxgo is a utility to connect to Checkpoint VPN without needing a browser. This project is based on Ralf Schlatterbeck's script: https://github.com/schlatterbeck/snxvpn
 
-## Installing
-Download the compiled binary from [Release Pages](https://github.com/francisco-anderson/snx-go/releases) or compile the binary
+## Installing Pre compiled
+Download the compiled binary from [Release Pages](https://github.com/francisco-anderson/snx-go/releases), 
+
+```sh
+# Dowload latest version for linux
+$ wget -qO snxgo https://github.com/francisco-anderson/snx-go/releases/latest/download/snxgo-linux-amd64
+
+# compare binary checksum output against version in release notes page (https://github.com/francisco-anderson/snx-go/releases)
+# if checksum do not match, binary was not successfully downloaded
+$ sha256sum snxgo
+
+# make binary as executable
+$ chmod +x snxgo
+
+# move binary to binaries directory
+$ sudo mv snxgo /usr/local/bin/snxgo
+
+```
 
 ## Building from Sources
 
