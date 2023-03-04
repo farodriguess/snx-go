@@ -22,6 +22,7 @@ type SNXParams struct {
 	Realm        string
 	SkipSecurity bool
 	Debug        bool
+	SnxPath      string
 }
 
 type SNXConnect struct {
@@ -104,7 +105,7 @@ func (snx *SNXConnect) Connect() {
 
 		extenderParams := snx.parseExtender(snx.readBody(res.Body))
 
-		snxExtender := SNXExtender{Params: extenderParams, Debug: snx.Params.Debug}
+		snxExtender := SNXExtender{Params: extenderParams, Debug: snx.Params.Debug, SnxPath: snx.Params.SnxPath}
 
 		snxExtender.CallSNX()
 

@@ -11,9 +11,10 @@ import (
 )
 
 type SNXExtender struct {
-	Params map[string]string
-	Debug  bool
-	info   []byte
+	Params  map[string]string
+	Debug   bool
+	SnxPath string
+	info    []byte
 }
 
 func (extender *SNXExtender) CallSNX() {
@@ -76,7 +77,7 @@ func (extender *SNXExtender) callSNX() {
 
 	extender.log("callSNX start")
 
-	snxCmd := exec.Command("/usr/bin/snx", "-Z")
+	snxCmd := exec.Command(extender.SnxPath, "-Z")
 
 	_, err := snxCmd.Output()
 	checkError(err)
