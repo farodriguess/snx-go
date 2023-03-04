@@ -26,7 +26,7 @@ func CreateHttpClient(options *HttpClientOptions) (*http.Client, *cookiejar.Jar)
 		panic(err)
 	}
 
-	return &http.Client{Transport: LoggerRoundTripper{tr, options.Debug}, Jar: jar}, jar
+	return &http.Client{Transport: &LoggerRoundTripper{tr, options.Debug}, Jar: jar}, jar
 
 }
 
@@ -35,11 +35,11 @@ type LoggerRoundTripper struct {
 	Debug   bool
 }
 
-func (lrt LoggerRoundTripper) RoundTrip(req *http.Request) (res *http.Response, e error) {
+func (lrt *LoggerRoundTripper) RoundTrip(req *http.Request) (res *http.Response, e error) {
 
 	lrt.log("Send Request...")
 	// Send the request, get the response (or the error)
-	reqBody := readBody(req.Body)
+	reqBody := readBody(&req.Body)
 	reqClone := req.Clone(req.Context())
 	reqClone.Body = io.NopCloser(strings.NewReader(reqBody))
 	res, e = lrt.Proxied.RoundTrip(reqClone)
@@ -59,32 +59,32 @@ func (lrt LoggerRoundTripper) RoundTrip(req *http.Request) (res *http.Response, 
 
 	// Handle the result.
 	if e != nil {
-		lrt.log(fmt.Sprintf("Error: %v", e))
+		lrt.log("Error: %v", e)
 	} else {
-		lrt.log(fmt.Sprintf(text, req.Method, req.URL, printHeader(reqClone.Header), reqBody, res.Status, res.Request.URL, printHeader(res.Header)))
+		lrt.log(text, req.Method, req.URL, printHeader(&reqClone.Header), reqBody, res.Status, res.Request.URL, printHeader(&res.Header))
 	}
 
 	return
 }
 
-func (lrt LoggerRoundTripper) log(msg string) {
+func (lrt *LoggerRoundTripper) log(msg string, a ...any) {
 	if lrt.Debug {
-		fmt.Println(msg)
+		fmt.Println(fmt.Sprintf(msg, a...))
 	}
 }
 
-func printHeader(header http.Header) string {
+func printHeader(header *http.Header) string {
 	text := ""
-	for k, v := range header {
+	for k, v := range *header {
 		text = strings.Join([]string{text, fmt.Sprintf("%s: %s", k, v)}, "\n")
 	}
 	return text
 }
 
-func readBody(Body io.ReadCloser) string {
-	if Body == nil {
+func readBody(Body *io.ReadCloser) string {
+	if *Body == nil {
 		return ""
 	}
-	resBody, _ := ioutil.ReadAll(Body)
+	resBody, _ := ioutil.ReadAll(*Body)
 	return string(resBody)
 }

@@ -13,14 +13,15 @@ import (
 type SNXExtender struct {
 	Params map[string]string
 	Debug  bool
+	info   []byte
 }
 
-func (extender SNXExtender) CallSNX() {
-	info := extender.generateSNXInfo()
-	extender.callSNX(info)
+func (extender *SNXExtender) CallSNX() {
+	extender.generateSNXInfo()
+	extender.callSNX()
 }
 
-func (extender SNXExtender) generateSNXInfo() []byte {
+func (extender *SNXExtender) generateSNXInfo() {
 
 	extender.log("generateSNXInfo start")
 	params := extender.Params
@@ -67,12 +68,11 @@ func (extender SNXExtender) generateSNXInfo() []byte {
 
 	extender.log("Packed Values: %v", data)
 	extender.log("generateSNXInfo end")
-
-	return data
+	extender.info = data
 
 }
 
-func (extender SNXExtender) callSNX(info []byte) {
+func (extender *SNXExtender) callSNX() {
 
 	extender.log("callSNX start")
 
@@ -84,8 +84,8 @@ func (extender SNXExtender) callSNX(info []byte) {
 	connection, err := net.Dial("tcp", "localhost:7776")
 	checkError(err)
 
-	extender.log("writing info %v", info)
-	_, err = connection.Write(info)
+	extender.log("writing info %v", extender.info)
+	_, err = connection.Write(extender.info)
 	checkError(err)
 
 	buffer := make([]byte, 4096)
@@ -102,7 +102,7 @@ func (extender SNXExtender) callSNX(info []byte) {
 
 }
 
-func (extender SNXExtender) log(msg string, a ...any) {
+func (extender *SNXExtender) log(msg string, a ...any) {
 	if extender.Debug {
 		fmt.Println(fmt.Sprintf(msg, a...))
 	}

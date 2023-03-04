@@ -20,7 +20,7 @@ type CustomRand struct {
 	testing bool
 }
 
-func (t CustomRand) Read(p []byte) (n int, err error) {
+func (t *CustomRand) Read(p []byte) (n int, err error) {
 	if t.testing {
 		util.FillArrayWithValue(p, 1)
 		n = len(p)
@@ -36,7 +36,7 @@ func (t CustomRand) Read(p []byte) (n int, err error) {
 	return n, err
 }
 
-func (pwEnconde PwEncode) EncodePWD(password string) string {
+func (pwEnconde *PwEncode) EncodePWD(password string) string {
 	pwEnconde.log("EncodePWD start")
 	bigN := new(big.Int)
 	_, ok := bigN.SetString(pwEnconde.Modulus, 16)
@@ -84,7 +84,7 @@ func (pwEnconde PwEncode) EncodePWD(password string) string {
 	return encodedPWD
 }
 
-func (pwEnconde PwEncode) log(msg string, a ...any) {
+func (pwEnconde *PwEncode) log(msg string, a ...any) {
 	if pwEnconde.Debug {
 		fmt.Println(fmt.Sprintf(msg, a...))
 	}
