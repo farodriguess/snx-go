@@ -25,6 +25,7 @@ var CLI struct {
 	SkipSecurity bool        `help:"Skip TLS Verify in HTTPS Connection" name:"skip-security" type:"bool"`
 	Debug        bool        `help:"Enable debug log" name:"debug" type:"bool"`
 	Version      versionFlag `help:"Show build version" name:"version" type:"bool"`
+	SnxPath      string      `help:"Alternative SNX Path" name:"snx-path" type:"string"`
 }
 
 func main() {
@@ -33,6 +34,7 @@ func main() {
 	fmt.Println(ctx.Command())
 
 	getPasswordIfNecessary()
+	defineSNXPath()
 
 	if CLI.Debug {
 		printCLIArgs()
@@ -45,6 +47,7 @@ func main() {
 		Realm:        CLI.Realm,
 		SkipSecurity: CLI.SkipSecurity,
 		Debug:        CLI.Debug,
+		SnxPath:      CLI.SnxPath,
 	}}
 	snxConnect.Connect()
 
@@ -74,6 +77,16 @@ func getPasswordIfNecessary() {
 
 }
 
+func defineSNXPath() {
+	if CLI.SnxPath == "" {
+		if runtime.GOOS == "darwin" {
+			CLI.SnxPath = "/usr/local/bin/snx"
+		} else {
+			CLI.SnxPath = "/usr/bin/snx"
+		}
+	}
+}
+
 func printCLIArgs() {
 	fmt.Printf(`
 CLI Args:
@@ -82,5 +95,6 @@ User: %s
 Password: ***
 Realm: %s
 SkipSecurity: %v
-`, CLI.Host, CLI.User, CLI.Realm, CLI.SkipSecurity)
+SNX Path: %s
+`, CLI.Host, CLI.User, CLI.Realm, CLI.SkipSecurity, CLI.SnxPath)
 }

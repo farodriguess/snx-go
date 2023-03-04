@@ -21,6 +21,8 @@ $ sudo mv snxgo /usr/local/bin/snxgo
 
 ```
 
+**Note for Mac users: On mac you need to go to security and privacy settings and allow this app to run. This is required due to the application not being signed.**
+
 ## Building from Sources
 
 ### Prerequisites
@@ -60,6 +62,7 @@ snxgo --host somehost.test --realm ssl_vpn --user user
 |    --skip-security  |   optional  | Disable SSL certificate checking        |
 |    --debug          |   optional  | Enable debug logging                    |
 |    --version        |   optional  | Display version and build date          |
+|    --snx-path       |   optional  | Alternative SNX Path                    |
 
 ¹ - Will be asked if not informed
 
