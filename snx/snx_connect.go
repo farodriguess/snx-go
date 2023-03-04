@@ -28,7 +28,7 @@ type SNXConnect struct {
 	Params SNXParams
 }
 
-func (snx SNXConnect) Connect() {
+func (snx *SNXConnect) Connect() {
 	client, jar := util.CreateHttpClient(&util.HttpClientOptions{SkipSecurity: snx.Params.SkipSecurity, Debug: snx.Params.Debug})
 
 	host := snx.Params.Host
@@ -143,13 +143,13 @@ func checkHttpError(err error) {
 	}
 }
 
-func (s SNXConnect) log(msg string) {
+func (s *SNXConnect) log(msg string) {
 	if s.Params.Debug {
 		fmt.Println(msg)
 	}
 }
 
-func (snxConnect SNXConnect) getlocationRSA(text string) (data string) {
+func (snxConnect *SNXConnect) getlocationRSA(text string) (data string) {
 	tkn := html.NewTokenizer(strings.NewReader(text))
 
 	for {
@@ -173,7 +173,7 @@ func (snxConnect SNXConnect) getlocationRSA(text string) (data string) {
 
 }
 
-func (snxConnect SNXConnect) getLoginAction(text string) (data string) {
+func (snxConnect *SNXConnect) getLoginAction(text string) (data string) {
 	tkn := html.NewTokenizer(strings.NewReader(text))
 
 	for {
@@ -198,7 +198,7 @@ func (snxConnect SNXConnect) getLoginAction(text string) (data string) {
 
 }
 
-func (snx SNXConnect) parseRSAParams(body string) (modulus string, exponent int) {
+func (snx *SNXConnect) parseRSAParams(body string) (modulus string, exponent int) {
 	modulusRegex := regexp.MustCompile(`var modulus = '(?P<modulus>.+)'`)
 	exponentRegex := regexp.MustCompile(`var exponent = '(?P<exponent>.+)'`)
 	modulosNameIndex := modulusRegex.SubexpIndex("modulus")
@@ -218,7 +218,7 @@ func (snx SNXConnect) parseRSAParams(body string) (modulus string, exponent int)
 	return modulus, exponent
 }
 
-func (snx SNXConnect) parseExtender(dat string) (params map[string]string) {
+func (snx *SNXConnect) parseExtender(dat string) (params map[string]string) {
 
 	params = map[string]string{}
 	m1 := regexp.MustCompile(`.*\.`)
@@ -246,7 +246,7 @@ func (snx SNXConnect) parseExtender(dat string) (params map[string]string) {
 	return params
 }
 
-func (snx SNXConnect) parseErrorMessage(dat string) string {
+func (snx *SNXConnect) parseErrorMessage(dat string) string {
 	tkn := html.NewTokenizer(strings.NewReader(dat))
 
 	found := false
