@@ -53,10 +53,12 @@ jobs:
 
       - name: Prepare release notes
         run: |
+          set -exuo pipefail
           notes_file=notes.md
           echo "# 🤖 Files Checksum" > $notes_file
           echo "```" >> $notes_file
-          sha256sum  bin/* >> $notes_file
+          ls -lta
+          sha256sum ./bin/* >> $notes_file
           echo "```" >> $notes_file
 
       # Create release
