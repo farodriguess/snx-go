@@ -1,0 +1,36 @@
+name: snxgo validate
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.19"]
+        go-args:
+          [
+            "GOOS=linux GOARCH=amd64",
+            "GOOS=darwin GOARCH=amd64",
+            "GOOS=darwin GOARCH=arm64",
+          ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      # You can test your matrix by printing the current Go version
+      - name: Display Go version
+        run: go version
+      - name: Install dependencies
+        run: go mod download
+      - name: Build
+        run: make ${{ matrix.go-args }}
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin
+          path: bin/snxgo-*
+          retention-days: 1
