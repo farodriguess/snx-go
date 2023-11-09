@@ -40,6 +40,7 @@ func (lrt *LoggerRoundTripper) RoundTrip(req *http.Request) (res *http.Response,
 	lrt.log("Send Request...")
 	// Send the request, get the response (or the error)
 	reqBody := readBody(&req.Body)
+	req.Header.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0")
 	reqClone := req.Clone(req.Context())
 	reqClone.Body = io.NopCloser(strings.NewReader(reqBody))
 	res, e = lrt.Proxied.RoundTrip(reqClone)
